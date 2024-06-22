@@ -82,10 +82,7 @@ The Coupon Service manages discount coupons for customer orders.
 - **Delete Coupon:** Removes a discount coupon from the platform.
 - **Get Discount for Coupon:** Retrieves the discount percentage for a valid coupon code.
 
-### Email Service
-The Email Service sends notification emails to customers.
 
-- **Send Email:** Sends an email to a specified recipient with a subject and message content.
 
 ## Setup
 1. Clone the repository.
