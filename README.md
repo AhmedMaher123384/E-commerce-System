@@ -16,12 +16,12 @@ This e-commerce platform provides a comprehensive set of services to manage onli
 ### Auth Service
 The Auth Service handles user registration, login, password changing,logout, and token refreshing.
 
-1. **Register:** Creates a new user account if the email is not already registered.
-2. **Login:** Authenticates a user and provides an access token and refresh token.
-3. **Logout:** Invalidates the access and refresh tokens by blacklisting them.
-4. **Change Password:** Allows users to change their password after verifying the current password.
-5. **Reset Password**: Allows users to set a new password after verifying the reset token.
-6. **Refresh Token:** Generates a new access token using a valid refresh token.
+- **Register:** Creates a new user account if the email is not already registered.
+- **Login:** Authenticates a user and provides an access token and refresh token.
+- **Logout:** Invalidates the access and refresh tokens by blacklisting them.
+- **Change Password:** Allows users to change their password after verifying the current password.
+- **Reset Password**: Allows users to set a new password after verifying the reset token.
+- **Refresh Token:** Generates a new access token using a valid refresh token.
 
 ### Category Service
 The Category Service manages product categories.
