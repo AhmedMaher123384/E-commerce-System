@@ -3,8 +3,10 @@ package com.Api.ecommerce.Service.Security.Implementations;
 import com.Api.ecommerce.Exception.Security.*;
 import com.Api.ecommerce.Model.Dto.Security.*;
 import com.Api.ecommerce.Model.Entity.Security.Customer;
+import com.Api.ecommerce.Model.Entity.Security.PasswordResetToken;
 import com.Api.ecommerce.Model.Entity.Security.Role;
 import com.Api.ecommerce.Repository.Security.CustomerRepository;
+import com.Api.ecommerce.Repository.Security.PasswordResetTokenRepository;
 import com.Api.ecommerce.Repository.Security.RoleRepository;
 import com.Api.ecommerce.Security.CustomeUserDetailsService;
 import com.Api.ecommerce.Security.JwtUtil;
@@ -20,10 +22,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.UUID;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -36,6 +41,8 @@ public class AuthServiceImpl implements AuthService {
     private CustomerRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
     @Autowired
     private JwtUtil jwtUtil;
     @Autowired
@@ -129,6 +136,59 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
 
+        emailService.sendEmail(user.getEmail(),
+                "Password Changed Successfully",
+                "Hello " + user.getName() + ",\n\nYour password has been changed successfully.\n\nBest regards,\nE-Commerce Team");
+
         return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<String> forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
+        Customer user = userRepository.findByEmail(forgotPasswordRequest.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        String token = UUID.randomUUID().toString();
+        PasswordResetToken resetToken = new PasswordResetToken();
+        resetToken.setEmail(user.getEmail());
+        resetToken.setToken(token);
+        resetToken.setExpiryDate(LocalDateTime.now().plusMinutes(1));
+        passwordResetTokenRepository.deleteByEmail(user.getEmail());
+        passwordResetTokenRepository.save(resetToken);
+
+        emailService.sendEmail(
+                user.getEmail(),
+                "Password Reset Verification Code",
+                "Dear " + user.getName() + ",\n\nYour verification code is: " + token + "\n\nBest regards,\nE-Commerce Team"
+        );
+
+        return new ResponseEntity<>("Verification code sent to your email", HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<String> resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(resetPasswordRequest.getVerificationCode())
+                .orElseThrow(() -> new VerificationCodeException("Invalid or expired verification code"));
+
+        if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            throw new VerificationCodeException("Invalid or expired verification code");
+        }
+
+        Customer user = userRepository.findByEmail(resetToken.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if (!resetPasswordRequest.getNewPassword().equals(resetPasswordRequest.getConfirmationPassword())) {
+            throw new PasswordMismatchException("Passwords do not match");
+        }
+
+        user.setPassword(passwordEncoder.encode(resetPasswordRequest.getNewPassword()));
+        userRepository.save(user);
+        passwordResetTokenRepository.delete(resetToken);
+
+        emailService.sendEmail(user.getEmail(),
+                "Password Reset Successfully",
+                "Hello " + user.getName() + ",\n\nYour password has been reset successfully.\n\nBest regards,\nE-Commerce Team");
+
+        return new ResponseEntity<>("Password reset successfully", HttpStatus.OK);
     }
 }

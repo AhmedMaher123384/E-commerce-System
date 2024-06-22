@@ -10,6 +10,8 @@ public interface AuthService {
     ResponseEntity<TokenResponse> login(LoginDto loginDto);
     ResponseEntity<AccessTokenResponse> refreshToken( RefreshTokenRequest request);
     ResponseEntity<String> changePassword(ChangePasswordRequest request, Authentication authentication);
+    ResponseEntity<String> forgotPassword(ForgotPasswordRequest forgotPasswordRequest);
+    ResponseEntity<String> resetPassword(ResetPasswordRequest resetPasswordRequest);
 
 
     }

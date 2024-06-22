@@ -26,6 +26,7 @@ public class OrderService implements OrderServiceI {
     private final CartRepository cartRepository;
     private final OrderMapper orderMapper;
     private final CouponService couponService;
+    private final EmailService emailService;
 
 
 
@@ -62,6 +63,12 @@ public class OrderService implements OrderServiceI {
             totalPrice -= discount;
         }
         order.setTotalPrice(totalPrice);
+
+        emailService.sendEmail(
+                customer.getEmail(),
+                "Order Confirmation",
+                "Dear " + customer.getName() + ",\n\nYour order #" + order.getId() + " has been placed successfully.\n\nThank you for shopping with us!\n\nBest regards,\nE-Commerce Team"
+        );
 
         Order savedOrder = orderRepository.save(order);
         OrderResponseDto responseDto = orderMapper.toOrderResponseDto(savedOrder);
