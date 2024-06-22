@@ -1,0 +1,11 @@
+package com.Api.ecommerce.Repository;
+
+import com.Api.ecommerce.Model.Entity.Coupon;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import java.util.Optional;
+
+@Repository
+public interface CouponRepository extends JpaRepository<Coupon,Long> {
+Optional<Coupon> findByCode(String code);
+}

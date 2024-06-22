@@ -1,0 +1,22 @@
+stripe:
+  api:
+    key: sk_test_51PSjCdGrgbly0PW8VoDPi8jFuNS981ce29g5jttG63HKduXPd28ucp3wBnnD93StTAKcSQlzhXVOf6FvaAUUgYzb00sucWPAE6
+payment:
+  success:
+    url: https://yourdomain.com/payment/success
+  cancel:
+    url: https://yourdomain.com/payment/cancel
+
+
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: am1322460@gmail.com
+    password: jqxc vjuj veod fktt
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
