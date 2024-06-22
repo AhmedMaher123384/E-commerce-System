@@ -13,7 +13,7 @@ import com.Api.ecommerce.Security.JwtUtil;
 import com.Api.ecommerce.Security.SecurityConstants;
 import com.Api.ecommerce.Service.Implementations.EmailService;
 import com.Api.ecommerce.Service.Security.Interfaces.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,30 +25,24 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.UUID;
 
+
+
+@RequiredArgsConstructor
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private CustomerRepository userRepository;
-    @Autowired
-    private RoleRepository roleRepository;
-    @Autowired
-    private PasswordResetTokenRepository passwordResetTokenRepository;
-    @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
-    private CustomeUserDetailsService userDetailsService;
-    @Autowired
-    private EmailService emailService;
+    private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
+    private final CustomerRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final JwtUtil jwtUtil;
+    private final CustomeUserDetailsService userDetailsService;
+    private final EmailService emailService;
 
 
     @Override

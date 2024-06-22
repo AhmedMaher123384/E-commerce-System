@@ -11,23 +11,21 @@ import com.Api.ecommerce.Security.CustomeUserDetailsService;
 import com.Api.ecommerce.Security.JwtUtil;
 import com.Api.ecommerce.Security.SecurityConstants;
 import com.Api.ecommerce.Service.Security.Interfaces.LogoutService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
+
+
+@RequiredArgsConstructor
 @Service
 public class LogoutServiceImpl implements LogoutService {
 
-    @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
-    private CustomeUserDetailsService userDetailsService;
-    @Autowired
-    private AccessTokenBlackListRepository accessTokenBlackListRepository;
-    @Autowired
-    private RefreshTokenBlackListRepository refreshTokenBlackListRepository;
+    private final JwtUtil jwtUtil;
+    private final CustomeUserDetailsService userDetailsService;
+    private final AccessTokenBlackListRepository accessTokenBlackListRepository;
+    private final RefreshTokenBlackListRepository refreshTokenBlackListRepository;
 
     @Override
     public ResponseEntity<String> logout(LogoutRequest logoutRequest) {
