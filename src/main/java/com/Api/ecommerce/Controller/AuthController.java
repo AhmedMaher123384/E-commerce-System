@@ -43,6 +43,18 @@ public class AuthController {
         return this.authService.changePassword(request, authentication);
     }
 
+    @Operation(summary = "Forget password")
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+        return this.authService.forgotPassword(forgotPasswordRequest);
+    }
+
+    @Operation(summary = "Reset new password")
+    @PutMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+        return this.authService.resetPassword(resetPasswordRequest);
+    }
+
     @Operation(summary = "User logout")
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestBody LogoutRequest logoutRequest) {
