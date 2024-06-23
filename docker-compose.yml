@@ -7,31 +7,31 @@ services:
     environment:
       SPRING_APPLICATION_JSON: '{
         "server.port": 5555,
-        "spring.datasource.url": "jdbc:postgresql://postgresdb:5432/comm",
+        "spring.datasource.url": "jdbc:postgresql://postgresdb:5432/ecomm",
         "spring.datasource.username": "root",
         "spring.datasource.password": "root",
         "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.PostgreSQLDialect",
         "spring.jpa.hibernate.ddl-auto" : "update"
       }'
     depends_on:
-      postgresdb:
+      postgresdb-ecommerce:
         condition: service_healthy
     networks:
       - ecommerce-Apis-network
 
-  postgresdb:
+  postgresdb-ecommerce:
     image: postgres:latest
     container_name: postgresdb
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=comm
+      - POSTGRES_DB=ecomm
     ports:
       - '5432:5432'
     volumes:
       - pg-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-d", "comm", "-U", "root"]
+      test: ["CMD", "pg_isready", "-d", "ecomm", "-U", "root"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -42,7 +42,7 @@ services:
     image: dpage/pgadmin4
     container_name: pgadmin
     depends_on:
-      - postgresdb
+      - postgresdb-ecommerce
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
